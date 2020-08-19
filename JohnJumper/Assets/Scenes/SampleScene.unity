@@ -161,7 +161,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &463264389
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -246,7 +246,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 463264387}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -4.1, y: 43.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -264,7 +264,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f81c39f8af8066949966d086e43fab98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallhang: {fileID: 21300000, guid: ffb378f1fbb60ed4eb503991323c81af, type: 3}
+  midair: {fileID: 21300000, guid: ab1c17a4034cded4996bded0c525c0bf, type: 3}
   speed: 30
+  isFacingRight: 1
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,7 +360,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 44.1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -373,7 +376,7 @@ PrefabInstance:
     - target: {fileID: 42642944751798988, guid: 910d8595e92eb194698ce2b5f8c21dbe,
         type: 3}
       propertyPath: m_Name
-      value: Wall (1)
+      value: RightWall
       objectReference: {fileID: 0}
     - target: {fileID: 802415371622855624, guid: 910d8595e92eb194698ce2b5f8c21dbe,
         type: 3}
@@ -442,7 +445,7 @@ PrefabInstance:
     - target: {fileID: 42642944751798988, guid: 910d8595e92eb194698ce2b5f8c21dbe,
         type: 3}
       propertyPath: m_Name
-      value: Wall
+      value: LeftWall
       objectReference: {fileID: 0}
     - target: {fileID: 802415371622855624, guid: 910d8595e92eb194698ce2b5f8c21dbe,
         type: 3}
