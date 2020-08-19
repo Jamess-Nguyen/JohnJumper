@@ -57,6 +57,3 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
-
-# All unity library files are ignored
-/JohnJumper/Library/*
