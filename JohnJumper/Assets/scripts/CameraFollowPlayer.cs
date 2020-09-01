@@ -13,7 +13,6 @@ public class CameraFollowPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        vect = new Vector3(0, CameraYOffset, 0);
         camTransform = GetComponent<Transform>();    
     }
 
@@ -21,7 +20,8 @@ public class CameraFollowPlayer : MonoBehaviour
     void Update()
     {
         // Follow the player
-        camTransform.position = new Vector3(player.transform.position.x, player.transform.position.y,
-            camTransform.position.z) + vect;
+        camTransform.position = new Vector3(camTransform.position.x, 
+            player.transform.position.y + CameraYOffset,
+            camTransform.position.z);
     }
 }

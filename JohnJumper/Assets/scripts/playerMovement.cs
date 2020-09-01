@@ -12,18 +12,17 @@ public class playerMovement : MonoBehaviour
     public Sprite death;
 
     public float speed = 5f;
-    public float jump_speed = 30f;
-    public float jump_cooldown = 0.5f;
+    public float jumpSpeed = 30f;
+    public float jumpCooldown = 0.5f;
     public bool isFacingRight = true;
 
     private bool inPlay = true;
     private bool isMidAir = false;
     private bool isJumping = false;
-    private float jump_cooldown_c = 0f;
+    private float jumpCooldownC = 0f;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Transform tr;
-    private float x_axis = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -39,17 +38,14 @@ public class playerMovement : MonoBehaviour
     {
         if (inPlay)
         {
-            if (Input.GetButtonDown("Jump") && !isMidAir && jump_cooldown_c <= 0f)
+            if (Input.GetButtonDown("Jump") && !isMidAir && jumpCooldownC <= 0f)
             {
                 isJumping = true;
-                jump_cooldown_c = jump_cooldown;
+                jumpCooldownC = jumpCooldown;
             }
-
-            x_axis = Input.GetAxisRaw("Horizontal"); // Returns -1 if moving left, 0 is not moving, 1 if moving right
-        
-            if (jump_cooldown_c > 0f)
+            if (jumpCooldownC > 0f)
             {
-                jump_cooldown_c -= Time.deltaTime;
+                jumpCooldownC -= Time.deltaTime;
             }
         }
 
@@ -60,27 +56,16 @@ public class playerMovement : MonoBehaviour
     {
         if (inPlay)
         {
-            switch (x_axis)
-            {
-                case 1:
-                    //UnityEngine.Debug.Log("Moving right!");
-                    rb.AddForce(new Vector2(speed * Time.deltaTime, 0), ForceMode2D.Impulse);
-                    break;
-                case -1:
-                    //UnityEngine.Debug.Log("Moving left!");
-                    rb.AddForce(new Vector2(-speed * Time.deltaTime, 0), ForceMode2D.Impulse);
-                    break;
-            }
             if (isJumping)
             {
                 isJumping = false;
                 //UnityEngine.Debug.Log("JUMP!");
                 if (isFacingRight)
                 {
-                    rb.AddForce(new Vector2(speed, jump_speed), ForceMode2D.Impulse);
+                    rb.AddForce(new Vector2(speed, jumpSpeed), ForceMode2D.Impulse);
                 }   else
                 {
-                    rb.AddForce(new Vector2(-speed, jump_speed), ForceMode2D.Impulse);
+                    rb.AddForce(new Vector2(-speed, jumpSpeed), ForceMode2D.Impulse);
                 }
                 
             }
@@ -107,6 +92,10 @@ public class playerMovement : MonoBehaviour
                 {
                     isFacingRight = false;
                     sr.flipX = true;
+                }
+                if (rb.velocity.y > 0f)
+                {
+                    rb.velocity = new Vector3(rb.velocity.x, 0f);
                 }
             }
             else if (collision.collider.tag == "Ground")
