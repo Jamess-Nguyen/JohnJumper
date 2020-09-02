@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Wall
   - Ground
+  - Spike
   layers:
   - Default
   - TransparentFX

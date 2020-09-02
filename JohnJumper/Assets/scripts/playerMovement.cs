@@ -15,8 +15,8 @@ public class playerMovement : MonoBehaviour
     public float jumpSpeed = 30f;
     public float jumpCooldown = 0.5f;
     public bool isFacingRight = true;
+    public bool inPlay = true;
 
-    private bool inPlay = true;
     private bool isMidAir = false;
     private bool isJumping = false;
     private float jumpCooldownC = 0f;
@@ -77,7 +77,14 @@ public class playerMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         //UnityEngine.Debug.Log(collision.collider.name);
-        if (inPlay)
+        if (collision.collider.tag == "Ground")
+        {
+            inPlay = false;
+            sr.sprite = death;
+            rb.isKinematic = true;
+            rb.simulated = false;
+            tr.position -= new Vector3(0, 1f);
+        } else if (inPlay)
         {
             if (collision.collider.tag == "Wall")
             {
@@ -97,14 +104,6 @@ public class playerMovement : MonoBehaviour
                 {
                     rb.velocity = new Vector3(rb.velocity.x, 0f);
                 }
-            }
-            else if (collision.collider.tag == "Ground")
-            {
-                inPlay = false;
-                sr.sprite = death;
-                rb.isKinematic = true;
-                rb.simulated = false;
-                tr.position -= new Vector3(0, 1f);
             }
         }
     }
