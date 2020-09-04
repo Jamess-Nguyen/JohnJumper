@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class LoopAround : MonoBehaviour
 {
-    public float yPositionStart = -40f;
-    public float yPositionEnd = 40f;
+    public GameObject yPositionStart_marker;
+    public GameObject yPositionEnd_marker;
 
+    private float yPositionStart;
+    private float yPositionEnd;
     private int numLoops = 0;
     private Transform playerTransform;
 
@@ -14,19 +16,19 @@ public class LoopAround : MonoBehaviour
     void Start()
     {
         playerTransform = GetComponent<Transform>();
+        yPositionStart = yPositionStart_marker.GetComponent<Transform>().position.y;
+        yPositionEnd = yPositionEnd_marker.GetComponent<Transform>().position.y;
     }
 
     void FixedUpdate()
     {
         if (playerTransform.position.y >= yPositionEnd)
         {
-            Debug.Log("LOOP!");
             numLoops++;
             playerTransform.position = new Vector3(playerTransform.position.x, yPositionStart+10f);
         }
         if (numLoops > 0 && playerTransform.position.y <= yPositionStart)
         {
-            Debug.Log("UNDO LOOP!");
             numLoops--;
             playerTransform.position = new Vector3(playerTransform.position.x, yPositionEnd-10f);
         }

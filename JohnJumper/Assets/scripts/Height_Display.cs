@@ -23,7 +23,7 @@ public class Height_Display : MonoBehaviour
     {
         int diffY = (int)(p_transform.position.y - (g_transform.position.y + (g_transform.localScale.y/2)) - Yoffset);
         //Debug.Log("diffY: " + diffY.ToString());
-        display_text.text = "Height from ground: " + diffY.ToString() + " | Player y postion: " + playerCharacter.transform.position.y.ToString();
+        display_text.text = "Height from ground: " + diffY.ToString() + " | Player y postion: " + ((int)playerCharacter.transform.position.y).ToString();
 
     }
 }

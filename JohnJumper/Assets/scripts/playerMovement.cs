@@ -11,13 +11,14 @@ public class playerMovement : MonoBehaviour
     public Sprite stagger;
     public Sprite death;
 
+    public int spikeBumps = 0; // how many times the player "bumped" on a spike
     public float speed = 5f;
     public float jumpSpeed = 30f;
     public float jumpCooldown = 0.5f;
     public bool isFacingRight = true;
     public bool inPlay = true;
-
-    private bool isMidAir = false;
+    public bool isMidAir = false;
+    
     private bool isJumping = false;
     private float jumpCooldownC = 0f;
     private Rigidbody2D rb;
@@ -49,6 +50,8 @@ public class playerMovement : MonoBehaviour
             }
         }
 
+        // Rotate the character (tumbling) if spikebumps >= 3;
+        
     }
 
     // Fixed update is called after a set time
@@ -80,6 +83,7 @@ public class playerMovement : MonoBehaviour
         if (collision.collider.tag == "Ground")
         {
             inPlay = false;
+            isMidAir = false;
             sr.sprite = death;
             rb.isKinematic = true;
             rb.simulated = false;

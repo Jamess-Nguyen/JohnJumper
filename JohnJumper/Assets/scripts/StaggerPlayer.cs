@@ -25,9 +25,12 @@ public class StaggerPlayer : MonoBehaviour
     {
         if (collision.name == player.name)
         {
+            player_script.isMidAir = true;
             player_sr.sprite = stagger;
             player_sr.flipX = !player_sr.flipX;
+            player_script.isFacingRight = !player_script.isFacingRight;
             player_script.inPlay = false;
+            player_script.spikeBumps++;
             if (player_tr.position.x > middleX)
             {
                 player_rb.velocity = new Vector3(0f, 0f);

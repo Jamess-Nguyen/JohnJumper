@@ -10,6 +10,6 @@ public class FPSDisplay : MonoBehaviour
     private void FixedUpdate()
     {
         float fps = Time.frameCount / Time.time;
-        display_Text.text = fps.ToString("F0") + " FPS";
+        display_Text.text = ((int)fps).ToString("F0") + " FPS";
     }
 }
