@@ -12,6 +12,7 @@ public class StaggerPlayer : MonoBehaviour
     private playerMovement player_script;
     private Rigidbody2D player_rb;
     private Transform player_tr;
+    private EchoEffect player_echo;
 
     private void Start()
     {
@@ -19,6 +20,7 @@ public class StaggerPlayer : MonoBehaviour
         player_script = player.GetComponent<playerMovement>();
         player_rb = player.GetComponent<Rigidbody2D>();
         player_tr = player.GetComponent<Transform>();
+        player_echo = player.GetComponent<EchoEffect>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -31,14 +33,15 @@ public class StaggerPlayer : MonoBehaviour
             player_script.isFacingRight = !player_script.isFacingRight;
             player_script.inPlay = false;
             player_script.spikeBumps++;
+            player_echo.enabled = false;
             if (player_tr.position.x > middleX)
             {
-                player_rb.velocity = new Vector3(0f, 0f);
+                player_rb.velocity = new Vector3(0f, player_rb.velocity.y > 0 ? 0 : player_rb.velocity.y);
                 player_rb.AddForce(new Vector2(-3f, 0f), ForceMode2D.Impulse);
             }
             else
             {
-                player_rb.velocity = new Vector3(0f, 0f);
+                player_rb.velocity = new Vector3(0f, player_rb.velocity.y > 0 ? 0 : player_rb.velocity.y);
                 player_rb.AddForce(new Vector2(3f, 0f), ForceMode2D.Impulse);
             }
         }   

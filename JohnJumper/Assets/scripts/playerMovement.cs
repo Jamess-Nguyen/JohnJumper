@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class playerMovement : MonoBehaviour
 {
+    public ParticleSystem player_pr;
     public Sprite wallhang;
     public Sprite midair;
     public Sprite standhang;
@@ -21,9 +22,14 @@ public class playerMovement : MonoBehaviour
     
     private bool isJumping = false;
     private float jumpCooldownC = 0f;
+    private float groundDeathOffset = 1.5f;
+    private int numSpikesUntilTumble = 2;
+    private float timeUntilWallslideParticles = 0.7f;
+    private float currentTimeUntilWallSlideParticles = 0f;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Transform tr;
+    //private TrailRenderer trailr;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +37,7 @@ public class playerMovement : MonoBehaviour
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        //trailr = GetComponent<TrailRenderer>();
     }
 
 
@@ -48,10 +55,14 @@ public class playerMovement : MonoBehaviour
             {
                 jumpCooldownC -= Time.deltaTime;
             }
+            player_pr.transform.position = new Vector3(transform.position.x, transform.position.y, player_pr.transform.position.z);
         }
-
-        // Rotate the character (tumbling) if spikebumps >= 3;
-        
+        else if (isMidAir) {
+            // Rotate the character (tumbling) if spikebumps >= 3;
+            if (spikeBumps >= numSpikesUntilTumble) {
+                tr.Rotate(0, 0, 1.0f, Space.Self);
+            }
+        }
     }
 
     // Fixed update is called after a set time
@@ -70,7 +81,6 @@ public class playerMovement : MonoBehaviour
                 {
                     rb.AddForce(new Vector2(-speed, jumpSpeed), ForceMode2D.Impulse);
                 }
-                
             }
         }
     }
@@ -79,7 +89,6 @@ public class playerMovement : MonoBehaviour
     // Called whenever a collider begins colliding with an object
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //UnityEngine.Debug.Log(collision.collider.name);
         if (collision.collider.tag == "Ground")
         {
             inPlay = false;
@@ -87,7 +96,8 @@ public class playerMovement : MonoBehaviour
             sr.sprite = death;
             rb.isKinematic = true;
             rb.simulated = false;
-            tr.position -= new Vector3(0, 1f);
+            tr.position -= new Vector3(0, groundDeathOffset);
+            tr.rotation = Quaternion.identity;
         } else if (inPlay)
         {
             if (collision.collider.tag == "Wall")
@@ -113,11 +123,29 @@ public class playerMovement : MonoBehaviour
     }
 
 
+    // Called whenever a collider is currently colliding with an object
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (inPlay)
+        {
+            if (currentTimeUntilWallSlideParticles < timeUntilWallslideParticles)
+            {
+                UnityEngine.Debug.Log("Yoink!");
+                currentTimeUntilWallSlideParticles += Time.deltaTime;
+            } else
+            {
+                player_pr.Play();
+            }
+        }
+    }
+
     // Called whenever a collider stops colliding with an object
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (inPlay)
         {
+            currentTimeUntilWallSlideParticles = 0f;
+            player_pr.Pause();
             if (collision.collider.tag == "Wall")
             {
                 sr.sprite = midair;
