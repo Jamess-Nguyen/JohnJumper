@@ -13,6 +13,7 @@ public class StaggerPlayer : MonoBehaviour
     private Rigidbody2D player_rb;
     private Transform player_tr;
     private EchoEffect player_echo;
+    private ParticleSystem player_pr;
 
     private void Start()
     {
@@ -21,6 +22,7 @@ public class StaggerPlayer : MonoBehaviour
         player_rb = player.GetComponent<Rigidbody2D>();
         player_tr = player.GetComponent<Transform>();
         player_echo = player.GetComponent<EchoEffect>();
+        player_pr = player.GetComponent<ParticleSystem>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -28,6 +30,8 @@ public class StaggerPlayer : MonoBehaviour
         if (collision.name == player.name)
         {
             player_script.isMidAir = true;
+            player_script.isWallSliding = false;
+            player_pr.Stop();
             player_sr.sprite = stagger;
             player_sr.flipX = !player_sr.flipX;
             player_script.isFacingRight = !player_script.isFacingRight;

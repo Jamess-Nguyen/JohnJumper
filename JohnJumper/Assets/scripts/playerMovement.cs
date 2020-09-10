@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class playerMovement : MonoBehaviour
 {
-    public ParticleSystem player_pr;
     public Sprite wallhang;
     public Sprite midair;
     public Sprite standhang;
@@ -19,17 +18,19 @@ public class playerMovement : MonoBehaviour
     public bool isFacingRight = true;
     public bool inPlay = true;
     public bool isMidAir = false;
-    
+    public bool isWallSliding = false;
     private bool isJumping = false;
     private float jumpCooldownC = 0f;
-    private float groundDeathOffset = 1.5f;
+    private float groundDeathOffset = 1.8f;
     private int numSpikesUntilTumble = 2;
-    private float timeUntilWallslideParticles = 0.7f;
+    private float timeUntilWallslideParticles = 0.3f;
     private float currentTimeUntilWallSlideParticles = 0f;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Transform tr;
-    //private TrailRenderer trailr;
+    private ParticleSystem player_pr;
+    private ParticleSystem.EmissionModule player_pr_em;
+    private ParticleSystem.ShapeModule player_pr_sp;
 
     // Start is called before the first frame update
     void Start()
@@ -37,7 +38,9 @@ public class playerMovement : MonoBehaviour
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-        //trailr = GetComponent<TrailRenderer>();
+        player_pr = GetComponent<ParticleSystem>();
+        player_pr_em = player_pr.emission;
+        player_pr_sp = player_pr.shape;
     }
 
 
@@ -130,11 +133,20 @@ public class playerMovement : MonoBehaviour
         {
             if (currentTimeUntilWallSlideParticles < timeUntilWallslideParticles)
             {
-                UnityEngine.Debug.Log("Yoink!");
                 currentTimeUntilWallSlideParticles += Time.deltaTime;
             } else
             {
-                player_pr.Play();
+                if (!isWallSliding) {
+                    // only play this once while sliding
+                    if (isFacingRight) {
+                        player_pr_sp.position = new Vector3(-0.35f, -0.8f, 0f);
+                    } else {
+                        player_pr_sp.position = new Vector3(0.35f, -0.8f, 0f);
+                    }
+                    isWallSliding = true;
+                    player_pr.Play();
+                    player_pr_em.enabled = true;
+                }
             }
         }
     }
@@ -145,7 +157,8 @@ public class playerMovement : MonoBehaviour
         if (inPlay)
         {
             currentTimeUntilWallSlideParticles = 0f;
-            player_pr.Pause();
+            isWallSliding = false;
+            player_pr.Stop();
             if (collision.collider.tag == "Wall")
             {
                 sr.sprite = midair;
