@@ -14,6 +14,6 @@ public class DisableOnTouch : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        playerPosition.AddForce(new Vector3(-20, 10, 0), ForceMode2D.Impulse);
+        playerPosition.AddForce(new Vector3(-20, 20, 0), ForceMode2D.Impulse);
     }
 }

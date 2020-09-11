@@ -24,20 +24,6 @@ public class BasicMovement : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
-
-        try
-        {
-            if (transform.position.y < CameraPY.position.y - 20)
-            {
-                playMovement = false;
-            }
-        }
-        catch
-        {
-            playMovement = false;
-        }
-
-
         if (playMovement == true)
         {
             if (Input.GetButton("Jump"))
