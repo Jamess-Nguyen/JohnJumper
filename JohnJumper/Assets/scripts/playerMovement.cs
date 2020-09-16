@@ -19,6 +19,8 @@ public class playerMovement : MonoBehaviour
     public bool inPlay = true;
     public bool isMidAir = false;
     public bool isWallSliding = false;
+    public float playerStartX = -7.357f;
+    public float playerStartY = 15.12f;
     private bool isJumping = false;
     private float jumpCooldownC = 0f;
     private float groundDeathOffset = 1.8f;
@@ -51,11 +53,13 @@ public class playerMovement : MonoBehaviour
         {
             if (Input.GetButtonDown("Jump") && !isMidAir && jumpCooldownC <= 0f)
             {
+                // Wall jump successful
                 isJumping = true;
                 jumpCooldownC = jumpCooldown;
             }
             if (jumpCooldownC > 0f)
             {
+                // Cannot walljump, cooldown in effect
                 jumpCooldownC -= Time.deltaTime;
             }
             player_pr.transform.position = new Vector3(transform.position.x, transform.position.y, player_pr.transform.position.z);
@@ -76,7 +80,7 @@ public class playerMovement : MonoBehaviour
             if (isJumping)
             {
                 isJumping = false;
-                //UnityEngine.Debug.Log("JUMP!");
+                // jump in the direction character is facing
                 if (isFacingRight)
                 {
                     rb.AddForce(new Vector2(speed, jumpSpeed), ForceMode2D.Impulse);
@@ -94,6 +98,7 @@ public class playerMovement : MonoBehaviour
     {
         if (collision.collider.tag == "Ground")
         {
+            // Character "dies" and game is over
             inPlay = false;
             isMidAir = false;
             sr.sprite = death;
@@ -101,10 +106,12 @@ public class playerMovement : MonoBehaviour
             rb.simulated = false;
             tr.position -= new Vector3(0, groundDeathOffset);
             tr.rotation = Quaternion.identity;
+            player_pr.Stop();
         } else if (inPlay)
         {
             if (collision.collider.tag == "Wall")
             {
+                // Successfully made it to a wall
                 isMidAir = false;
                 sr.sprite = wallhang;
                 if (collision.collider.name == "LeftWall")
@@ -133,9 +140,11 @@ public class playerMovement : MonoBehaviour
         {
             if (currentTimeUntilWallSlideParticles < timeUntilWallslideParticles)
             {
+                // We just stuck the landing, don't emit wallslide dust
                 currentTimeUntilWallSlideParticles += Time.deltaTime;
             } else
             {
+                // Emit wallslide dust from wallsliding
                 if (!isWallSliding) {
                     // only play this once while sliding
                     if (isFacingRight) {
@@ -156,6 +165,7 @@ public class playerMovement : MonoBehaviour
     {
         if (inPlay)
         {
+            // Stop emitting particles (if emitting at all), and change sprites
             currentTimeUntilWallSlideParticles = 0f;
             isWallSliding = false;
             player_pr.Stop();
@@ -165,5 +175,21 @@ public class playerMovement : MonoBehaviour
                 isMidAir = true;
             }
         }   
+    }
+
+    public void ResetCharacter() {
+        inPlay = true;
+        isFacingRight = true;
+        sr.flipX = false;
+        isWallSliding = true;
+        sr.sprite = wallhang;
+        tr.position = new Vector3(playerStartX, playerStartY);
+        tr.rotation = Quaternion.identity;
+        rb.isKinematic = false;
+        rb.simulated = true;
+        rb.velocity = new Vector3(0f, 0f);
+        isJumping = false;
+        isMidAir = false;
+        spikeBumps = 0;
     }
 }

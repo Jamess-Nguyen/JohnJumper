@@ -16,7 +16,6 @@ public class startGame : MonoBehaviour
     }
 
     void OnStartButtonClick() {
-        Debug.Log("Loading scene!");
         SceneManager.LoadScene(GameplaySceneName, LoadSceneMode.Single);
     }
 }
