@@ -32,13 +32,13 @@ public class BasicMovement : MonoBehaviour
             {
                 if (Left == true)
                 {
-                    rb.AddForce(new Vector3(50, 50, 0), ForceMode2D.Impulse);
+                    rb.AddForce(new Vector3(70, 70, 0), ForceMode2D.Impulse);
                     Left = false;
 
                 }
                 else if (Right == true)
                 {
-                    rb.AddForce(new Vector3(-50, 50, 0), ForceMode2D.Impulse);
+                    rb.AddForce(new Vector3(-70, 70, 0), ForceMode2D.Impulse);
                     Right = false;
 
                 }
