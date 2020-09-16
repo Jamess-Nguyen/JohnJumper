@@ -17,7 +17,7 @@ public class Translation : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Wall"))
+        if (other.tag == "WallRight" || other.tag == "WallLeft")
         {
             speed = speed * -1.0f;
         }

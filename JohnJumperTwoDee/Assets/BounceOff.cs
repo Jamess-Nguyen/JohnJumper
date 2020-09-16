@@ -13,13 +13,17 @@ public class BounceOff : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (playerTransform.position.y < transform.position.y - transform.localScale.y/2 || playerTransform.position.y < transform.position.y + transform.localScale.y / 2)
+        if(collision.tag == "Player")
         {
-            rb.velocity = new Vector3(rb.velocity.x, -rb.velocity.y, 0f);
+            if (playerTransform.position.y < transform.position.y - transform.localScale.y / 2 || playerTransform.position.y < transform.position.y + transform.localScale.y / 2)
+            {
+                rb.velocity = new Vector3(rb.velocity.x, -rb.velocity.y, 0f);
+            }
+            else
+            {
+                rb.velocity = new Vector3(-rb.velocity.x, rb.velocity.y, 0f);
+            }
         }
-        else
-        {
-            rb.velocity = new Vector3(-rb.velocity.x, rb.velocity.y, 0f);
-        }
+
     }
 }
