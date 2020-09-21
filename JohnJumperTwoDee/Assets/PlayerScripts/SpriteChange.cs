@@ -1,43 +1,66 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.WSA;
 
 public class SpriteChange : MonoBehaviour
 {
     private SpriteRenderer rend;
-    private Sprite LeftWall, RightWall, LeftJump, RightJump, LightDead, Dead;
+    private Sprite Idle, Jumper, Wallcling;
     public Rigidbody2D Player;
     public BasicMovement BMscript;
     // Start is called before the first frame update
     private void Start()
     {
         rend = GetComponent<SpriteRenderer>();
-        LeftWall = Resources.Load<Sprite>("WallClingLeft");
-        RightWall = Resources.Load<Sprite>("WallClingRight");
-        RightJump = Resources.Load<Sprite>("RightJumping");
-        LeftJump = Resources.Load<Sprite>("LeftJumping");
-        rend.sprite = LeftWall;
-    }
+        Idle = Resources.Load<Sprite>("idle");
+        Jumper = Resources.Load<Sprite>("Jumper");
+        Wallcling = Resources.Load<Sprite>("wallcling");
 
+    }
     // Update is called once per frame
     void Update()
     {
-        if(BMscript.Left == true)
+        if(BMscript.OnFloor == true)
         {
-            rend.sprite = LeftWall;
+            rend.sprite = Idle;
         }
-        else if(BMscript.Right == true)
+
+        else if (Vector2.Dot(Player.velocity, Vector2.right) > 0 && BMscript.playMovement == true)
         {
-            rend.sprite = RightWall;
+            rend.sprite = Jumper;
+            if(rend.flipX == true)
+            {
+                rend.flipX = false;
+            }
         }
-        else if(Player.velocity.x > 0f)
+        else if (Vector2.Dot(Player.velocity, Vector2.right) < 0 && BMscript.playMovement == true)
         {
-            rend.sprite = RightJump;
+            rend.sprite = Jumper;
+            if(rend.flipX == false)
+            {
+                rend.flipX = true;
+            }
         }
-        else if(Player.velocity.x < 0f)
+
+        else if (Vector2.Dot(Player.velocity, Vector2.right) == 0 && BMscript.playMovement == true && BMscript.Left == true)
         {
-            rend.sprite = LeftJump;
+            rend.sprite = Wallcling;
+            if (rend.flipX == true)
+            {
+                rend.flipX = false;
+            }
         }
+
+        else if (Vector2.Dot(Player.velocity, Vector2.right) == 0 && BMscript.playMovement == true && BMscript.Right == true)
+        {
+            rend.sprite = Wallcling;
+            if (rend.flipX == false)
+            {
+                rend.flipX = true;
+            }
+        }
+
     }
 }

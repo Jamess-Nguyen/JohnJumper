@@ -8,6 +8,7 @@ TagManager:
   - WallLeft
   - Disable
   - Wall
+  - Floor
   layers:
   - Default
   - TransparentFX

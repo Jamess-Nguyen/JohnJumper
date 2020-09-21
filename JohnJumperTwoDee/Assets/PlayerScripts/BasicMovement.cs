@@ -9,6 +9,7 @@ public class BasicMovement : MonoBehaviour
     public bool Left = true;
     public bool Right = false;
     public bool playMovement = true;
+    public bool OnFloor = false;
     public static float jump = 0;
     public GameObject Camera;
     public GameObject ScrollingGameObject;
@@ -67,5 +68,22 @@ public class BasicMovement : MonoBehaviour
             Debug.Log(jump);
         }
         //END ONE BUTTON MOVEMENT
+
+        //CHECKS IF ON FLOOR
+        if (collision.collider.tag == "Floor")
+        {
+            OnFloor = true;
+        }
+        //END CHECKING ON FLOOR
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        //CHECKS LEAVING FLOOR
+        if (collision.collider.tag == "Floor")
+        {
+            OnFloor = false;
+        }
+        //END CHECK LEAVING FLOOR
     }
 }
