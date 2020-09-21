@@ -6,10 +6,10 @@ public class LoopAround : MonoBehaviour
 {
     public GameObject yPositionStart_marker;
     public GameObject yPositionEnd_marker;
+    public int numLoops = 0;
 
     private float yPositionStart;
     private float yPositionEnd;
-    private int numLoops = 0;
     private Transform playerTransform;
 
     // Start is called before the first frame update
