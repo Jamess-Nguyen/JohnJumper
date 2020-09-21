@@ -55,7 +55,6 @@ public class BasicMovement : MonoBehaviour
         {
             Left = true;
             Right = false;
-            Debug.Log("LeftWall");
             jump = jump + (float).5;
 
         }
@@ -63,9 +62,7 @@ public class BasicMovement : MonoBehaviour
         {
             Right = true;
             Left = false;
-            Debug.Log("RightWall");
             jump = jump + (float).5;
-            Debug.Log(jump);
         }
         //END ONE BUTTON MOVEMENT
 
