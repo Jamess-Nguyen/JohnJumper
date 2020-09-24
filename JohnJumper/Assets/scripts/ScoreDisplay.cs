@@ -63,12 +63,14 @@ public class ScoreDisplay : MonoBehaviour
     void RestartGame()
     {
         player_movement.ResetCharacter();
+        player_scorecalc.maxHeightFromGround = 0;
     }
 
     // Return to main menu
     void ReturnMainMenu()
     {
         SceneManager.LoadScene(MainMenuSceneName, LoadSceneMode.Single);
+        player_scorecalc.maxHeightFromGround = 0;
     }
 
     // Hide the GUI and disable the buttons

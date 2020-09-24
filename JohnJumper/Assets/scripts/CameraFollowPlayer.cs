@@ -8,6 +8,11 @@ public class CameraFollowPlayer : MonoBehaviour
     [Range(0f, 2f)]
     public float CameraYOffset = 2f;
 
+    void Start()
+    {
+        Screen.SetResolution(1280, 720, true);
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {

@@ -12,28 +12,32 @@ public class playerMovement : MonoBehaviour
     public Sprite death;
 
     public int spikeBumps = 0; // how many times the player "bumped" on a spike
-    public float speed = 5f;
-    public float jumpSpeed = 700f;
-    public float maxJumpSpeed = 2680f;
+    [Range(1,30)]
+    public float speed = 10f;
+    [Range(1,40)]
+    public float jumpVelocity = 15f;
+    public float maxJumpVelocity = 60f;
     public float jumpCooldown = 0.5f;
     public bool isFacingRight = true;
     public bool inPlay = true;
     public bool isMidAir = false;
     public bool isWallSliding = false;
-    public float playerStartX = -7.357f;
+    public float playerStartX = -12.4f;
     public float playerStartY = 15.12f;
+    public float timeComboDecays = 2f;
+    public float currentTimeBetweenJumps;
     public ComboDisplay player_combo_script;
 
+    private float timeDeltaSecond = 1f;
+    private float comboDecayTick = .75f; // min is .75f, max is .99f
     private float oldPlayYPosition;
-    private float minJumpSpeed;
+    private float minJumpVelocity;
     private bool isJumping = false;
     private float jumpCooldownC = 0f;
-    private float groundDeathOffset = 1.8f;
+    private float groundDeathOffset = 3.75f;
     private int numSpikesUntilTumble = 2;
     private float timeUntilWallslideParticles = 0.3f;
     private float currentTimeUntilWallSlideParticles = 0f;
-    private float timeComboDecays = 2f;
-    private float currentTimeBetweenJumps;
     private EchoEffect player_echo;
     private LoopAround player_looparound;
     private Rigidbody2D rb;
@@ -55,7 +59,7 @@ public class playerMovement : MonoBehaviour
         player_pr_em = player_pr.emission;
         player_pr_sp = player_pr.shape;
         currentTimeBetweenJumps = timeComboDecays;
-        minJumpSpeed = jumpSpeed;
+        minJumpVelocity = jumpVelocity;
     }
 
     // Update is called once per frame
@@ -66,13 +70,15 @@ public class playerMovement : MonoBehaviour
             if (Input.GetButtonDown("Jump") && !isMidAir && jumpCooldownC <= 0f)
             {
                 // Wall jump successful
-                if (transform.position.y >= oldPlayYPosition) {
-                    // If we jump and we move up, increment jump combo by 1.
-                    player_combo_script.numCombos = player_combo_script.numCombos == 99 ? 99 : player_combo_script.numCombos+1;
-                    currentTimeBetweenJumps = timeComboDecays;
+                player_combo_script.numCombos = player_combo_script.numCombos == 99 ? 99 : player_combo_script.numCombos+1;
+                if (player_combo_script.numCombos >= 40) {
+                    player_echo.enabled = true;
                 }
+                currentTimeBetweenJumps = timeComboDecays;
                 isJumping = true;
                 jumpCooldownC = jumpCooldown;
+                timeDeltaSecond = 1f;
+                comboDecayTick = .75f;
             }
             if (jumpCooldownC > 0f)
             {
@@ -82,8 +88,18 @@ public class playerMovement : MonoBehaviour
             player_pr.transform.position = new Vector3(transform.position.x, transform.position.y, player_pr.transform.position.z);
             if (currentTimeBetweenJumps > 0) currentTimeBetweenJumps -= Time.deltaTime;
             else {
-                player_combo_script.numCombos = 0;
-                jumpSpeed = minJumpSpeed;
+                if (timeDeltaSecond <= comboDecayTick) {
+                    // decay the combo every 1/4th of a second
+                    timeDeltaSecond = 1f;
+                    player_combo_script.numCombos = player_combo_script.numCombos > 1 ? player_combo_script.numCombos-1 : 0;
+                    jumpVelocity = jumpVelocity > minJumpVelocity ? jumpVelocity - .1f : minJumpVelocity;
+                    comboDecayTick = comboDecayTick >= .99f ? .99f : comboDecayTick + .01f;
+                    if (player_combo_script.numCombos < 40f) {
+                        player_echo.enabled = false;
+                    }
+                }
+                timeDeltaSecond -= Time.deltaTime;
+                
             }
             oldPlayYPosition = transform.position.y;
         }
@@ -106,14 +122,16 @@ public class playerMovement : MonoBehaviour
                 // jump in the direction character is facing
                 if (isFacingRight)
                 {
-                    rb.AddForce(new Vector2(speed, 0), ForceMode2D.Impulse);
-                    rb.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Force);
+                    //rb.AddForce(new Vector2(speed, 0), ForceMode2D.Force);
+                    rb.velocity = Vector2.right * speed;
                 }   else
                 {
-                    rb.AddForce(new Vector2(-speed, 0), ForceMode2D.Impulse);
-                    rb.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Force);
+                    //rb.AddForce(new Vector2(-speed, 0), ForceMode2D.Force);
+                    rb.velocity = Vector2.left * speed;
                 }
-                if (jumpSpeed < maxJumpSpeed)  jumpSpeed += 20f;
+                //rb.AddForce(new Vector2(0, jumpSpeed), ForceMode2D.Force);
+                rb.velocity += Vector2.up * jumpVelocity;
+                if (jumpVelocity < maxJumpVelocity)  jumpVelocity += .1f;
             }
         }
     }
@@ -133,6 +151,7 @@ public class playerMovement : MonoBehaviour
             tr.position -= new Vector3(0, groundDeathOffset);
             tr.rotation = Quaternion.identity;
             player_pr.Stop();
+            player_combo_script.numCombos = 0;
         } else if (inPlay)
         {
             if (collision.collider.tag == "Wall")
@@ -216,10 +235,12 @@ public class playerMovement : MonoBehaviour
         rb.velocity = new Vector3(0f, 0f);
         isJumping = false;
         isMidAir = false;
-        player_echo.enabled = true;
-        jumpSpeed = minJumpSpeed;
+        player_echo.enabled = false;
+        jumpVelocity = minJumpVelocity;
         player_looparound.numLoops = 0;
         player_combo_script.numCombos = 0;
         spikeBumps = 0;
+        currentTimeBetweenJumps = 0;
+        player_combo_script.numCombos = 0;
     }
 }
