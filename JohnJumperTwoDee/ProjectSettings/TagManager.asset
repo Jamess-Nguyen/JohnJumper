@@ -9,6 +9,8 @@ TagManager:
   - Disable
   - Wall
   - Floor
+  - WallSpriteTop
+  - WallSpriteBottom
   layers:
   - Default
   - TransparentFX
