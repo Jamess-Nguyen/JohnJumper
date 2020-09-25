@@ -64,10 +64,10 @@
     <Compile Include="Assets\PlayerScripts\BasicMovement.cs" />
     <Compile Include="Assets\ScrollingScripts\LevelGeneration.cs" />
     <Compile Include="Assets\ScrollingScripts\ScollingWalls.cs" />
-    <Compile Include="Assets\PlayerScripts\FollowPlayer.cs" />
-    <Compile Include="Assets\DangerMobScripts\DisableOnTouch.cs" />
     <Compile Include="Assets\ScrollingScripts\ScrollingSprites.cs" />
+    <Compile Include="Assets\PlayerScripts\FollowPlayer.cs" />
     <Compile Include="Assets\SetScreenResolution.cs" />
+    <Compile Include="Assets\DangerMobScripts\DisableOnTouch.cs" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.0b2/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
