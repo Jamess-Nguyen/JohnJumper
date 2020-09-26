@@ -9,6 +9,7 @@ public class LoopAround : MonoBehaviour
     public GameObject citySkyline;
     public GameObject ground;
     public int numLoops = 0;
+    public int adjustedLoopHeight = 0;
 
     private float yPositionStart;
     private float yPositionEnd;
@@ -41,12 +42,12 @@ public class LoopAround : MonoBehaviour
         if (playerTransform.position.y >= yPositionEnd)
         {
             numLoops++;
-            playerTransform.position = new Vector3(playerTransform.position.x, yPositionStart+10f);
+            playerTransform.position = new Vector3(playerTransform.position.x, yPositionStart+.5f);
         }
         if (numLoops > 0 && playerTransform.position.y <= yPositionStart)
         {
             numLoops--;
-            playerTransform.position = new Vector3(playerTransform.position.x, yPositionEnd-10f);
+            playerTransform.position = new Vector3(playerTransform.position.x, yPositionEnd-.5f);
         }
     }
 }

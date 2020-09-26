@@ -13,6 +13,7 @@ public class ScoreDisplay : MonoBehaviour
     public Button retryButton;
     public Button quitButton;
     public string MainMenuSceneName = "Title";
+
     private Image outerPanel;
     private Image retryButtonImage;
     private Image quitButtonImage;
@@ -22,6 +23,7 @@ public class ScoreDisplay : MonoBehaviour
     private bool ScreenDisplay = false; 
     private bool ScreenUnDisplay = false;
     private ScoreCalculator player_scorecalc;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -99,6 +101,6 @@ public class ScoreDisplay : MonoBehaviour
         outerPanel.enabled = true;
         innerPanel.enabled = true;
         resultText.enabled = true;
-        resultText.text = "You climbed " + player_scorecalc.maxHeightFromGround.ToString() + " feet before falling.";
+        resultText.text = "You scaled " + player_scorecalc.maxHeightFromGround.ToString() + " feet before falling.";
     }
 }
