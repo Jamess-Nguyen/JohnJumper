@@ -6,8 +6,9 @@ using TMPro;
 public class ComboDisplay : MonoBehaviour
 {
     public int numCombos = 0;
-    private int prevCombos = 0;
     public playerMovement playerMoveScript;
+
+    private int prevCombos = 0;
     private TextMeshProUGUI textCombo;
     private bool debounce;
 
@@ -24,16 +25,28 @@ public class ComboDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (prevCombos != numCombos) {
-            if (numCombos > 0) {
-                textCombo.text = numCombos.ToString() + "x";
-            }   else {
-                textCombo.text = "";
+        if (playerMoveScript.inPlay && !playerMoveScript.beforeplay)
+        {
+            textCombo.enabled = true;
+            if (prevCombos != numCombos)
+            {
+                if (numCombos > 0)
+                {
+                    textCombo.text = numCombos.ToString() + "x";
+                }
+                else
+                {
+                    textCombo.text = "";
+                }
             }
+            if (numCombos > 0)
+            {
+                textCombo.color = Color.Lerp(gray, coolPink, playerMoveScript.currentTimeBetweenJumps / playerMoveScript.timeComboDecays);
+            }
+            prevCombos = numCombos;
+        } else
+        {
+            textCombo.enabled = false;
         }
-        if (numCombos > 0) {
-            textCombo.color = Color.Lerp(gray, coolPink, playerMoveScript.currentTimeBetweenJumps / playerMoveScript.timeComboDecays);
-        }
-        prevCombos = numCombos;
     }
 }

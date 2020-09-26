@@ -7,6 +7,8 @@ public class DisplayHeight : MonoBehaviour
 {
     public ScoreCalculator player_calc;
     public LoopAround player_loop;
+    public playerMovement player_move;
+
     private TextMeshProUGUI heightText;
     private int adjustedLoopHeight;
     // Start is called before the first frame update
@@ -17,8 +19,15 @@ public class DisplayHeight : MonoBehaviour
 
     void Update()
     {
-        adjustedLoopHeight = player_calc.heightFromGround; // + (player_loop.numLoops * 93);
-        if (adjustedLoopHeight <= 0) adjustedLoopHeight = 0;
-        heightText.text = adjustedLoopHeight.ToString() + " feet";
+        if (player_move.inPlay && !player_move.beforeplay)
+        {
+            heightText.enabled = true;
+            adjustedLoopHeight = player_calc.heightFromGround;
+            if (adjustedLoopHeight <= 0) adjustedLoopHeight = 0;
+            heightText.text = adjustedLoopHeight.ToString() + " feet";
+        } else
+        {
+            heightText.enabled = false;
+        }
     }
 }

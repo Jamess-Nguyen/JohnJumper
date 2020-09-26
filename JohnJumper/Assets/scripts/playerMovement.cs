@@ -19,7 +19,8 @@ public class playerMovement : MonoBehaviour
     public float maxJumpVelocity = 60f;
     public float jumpCooldown = 0.5f;
     public bool isFacingRight = true;
-    public bool inPlay = true;
+    public bool beforeplay = true;
+    public bool inPlay = false;
     public bool isMidAir = false;
     public bool isWallSliding = false;
     public float playerStartX = -12.4f;
@@ -30,7 +31,6 @@ public class playerMovement : MonoBehaviour
 
     private float timeDeltaSecond = 1f;
     private float comboDecayTick = .75f; // min is .75f, max is .99f
-    private float oldPlayYPosition;
     private float minJumpVelocity;
     private bool isJumping = false;
     private float jumpCooldownC = 0f;
@@ -60,11 +60,22 @@ public class playerMovement : MonoBehaviour
         player_pr_sp = player_pr.shape;
         currentTimeBetweenJumps = timeComboDecays;
         minJumpVelocity = jumpVelocity;
+        player_pr_em.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (beforeplay)
+        {
+            rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
+            if (Input.GetButtonDown("Jump"))
+            {
+                rb.constraints = RigidbodyConstraints2D.None;
+                beforeplay = false;
+                inPlay = true;
+            }
+        }
         if (inPlay)
         {
             if (Input.GetButtonDown("Jump") && !isMidAir && jumpCooldownC <= 0f)
@@ -101,7 +112,6 @@ public class playerMovement : MonoBehaviour
                 timeDeltaSecond -= Time.deltaTime;
                 
             }
-            oldPlayYPosition = transform.position.y;
         }
         else if (isMidAir) {
             // Rotate the character (tumbling) if spikebumps >= 3;
@@ -223,7 +233,8 @@ public class playerMovement : MonoBehaviour
     }
 
     public void ResetCharacter() {
-        inPlay = true;
+        inPlay = false;
+        beforeplay = true;
         isFacingRight = true;
         sr.flipX = false;
         isWallSliding = true;

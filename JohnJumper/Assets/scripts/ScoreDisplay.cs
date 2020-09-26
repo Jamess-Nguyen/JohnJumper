@@ -44,7 +44,7 @@ public class ScoreDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!player_movement.inPlay) {
+        if (!player_movement.inPlay && !player_movement.beforeplay) {
             // Open the GUI once.
             if (!ScreenDisplay) {
                 ScreenDisplay = true;

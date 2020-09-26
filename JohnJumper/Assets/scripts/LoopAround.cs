@@ -8,6 +8,8 @@ public class LoopAround : MonoBehaviour
     public GameObject yPositionEnd_marker;
     public GameObject citySkyline;
     public GameObject ground;
+    public GameObject firstSpike;
+
     public int numLoops = 0;
     public int adjustedLoopHeight = 0;
 
@@ -16,6 +18,7 @@ public class LoopAround : MonoBehaviour
     private Transform playerTransform;
     private SpriteRenderer cityRender;
     private SpriteRenderer groundRender;
+    private SpriteRenderer spikeRender1st;
 
     // Start is called before the first frame update
     void Start()
@@ -25,16 +28,19 @@ public class LoopAround : MonoBehaviour
         yPositionEnd = yPositionEnd_marker.GetComponent<Transform>().position.y;
         cityRender = citySkyline.GetComponent<SpriteRenderer>();
         groundRender = ground.GetComponent<SpriteRenderer>();
+        spikeRender1st = firstSpike.GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
         if (numLoops > 0) {
+            spikeRender1st.enabled = false;
             cityRender.enabled = false;
-            groundRender.enabled = false;
+            groundRender.enabled = true;
         } else {
             cityRender.enabled = true;
             groundRender.enabled = true;
+            spikeRender1st.enabled = false;
         }
     }
     void FixedUpdate()
