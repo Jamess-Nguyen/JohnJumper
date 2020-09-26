@@ -20,7 +20,7 @@ public class EchoScript : MonoBehaviour
             if (timeBtwSpawns <= 0)
             {
                 GameObject instance = Instantiate(echo, transform.position, Quaternion.identity);
-                Destroy(instance, .5f);
+                Destroy(instance, .3f);
                 timeBtwSpawns = startTimeBtwnSpawns;
             }
             else
