@@ -14,6 +14,7 @@ public class StaggerPlayer : MonoBehaviour
     private Transform player_tr;
     private EchoEffect player_echo;
     private ParticleSystem player_pr;
+    private sounds player_sounds;
 
     private void Start()
     {
@@ -23,12 +24,17 @@ public class StaggerPlayer : MonoBehaviour
         player_tr = player.GetComponent<Transform>();
         player_echo = player.GetComponent<EchoEffect>();
         player_pr = player.GetComponent<ParticleSystem>();
+        player_sounds = player.GetComponent<sounds>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.name == player.name)
         {
+            player_sounds.grunt.pitch = .7f;
+            player_sounds.Grunt();
+            player_sounds.SpikeImpact();
+            player_sounds.wallSlide.Stop();
             player_script.isMidAir = true;
             player_script.isWallSliding = false;
             player_pr.Stop();

@@ -29,6 +29,8 @@ public class playerMovement : MonoBehaviour
     public float currentTimeBetweenJumps;
     public ComboDisplay player_combo_script;
 
+    public float restartDelay = .1f; // avoid the restart, jump immediately glitch
+    private float restartDelayCount = .5f; 
     private float timeDeltaSecond = 1f;
     private float comboDecayTick = .75f; // min is .75f, max is .99f
     private float minJumpVelocity;
@@ -40,6 +42,8 @@ public class playerMovement : MonoBehaviour
     private float currentTimeUntilWallSlideParticles = 0f;
     private EchoEffect player_echo;
     private LoopAround player_looparound;
+    private sounds player_sounds;
+    private spikeGen sg;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private Transform tr;
@@ -50,12 +54,15 @@ public class playerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        restartDelayCount = restartDelay;
         tr = GetComponent<Transform>();
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        sg = GetComponent<spikeGen>();
         player_pr = GetComponent<ParticleSystem>();
         player_echo = GetComponent<EchoEffect>();
         player_looparound = GetComponent<LoopAround>();
+        player_sounds = GetComponent<sounds>();
         player_pr_em = player_pr.emission;
         player_pr_sp = player_pr.shape;
         currentTimeBetweenJumps = timeComboDecays;
@@ -69,18 +76,21 @@ public class playerMovement : MonoBehaviour
         if (beforeplay)
         {
             rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY;
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump") && restartDelayCount < 0)
             {
                 rb.constraints = RigidbodyConstraints2D.None;
                 beforeplay = false;
                 inPlay = true;
             }
+            restartDelayCount -= Time.deltaTime;
         }
         if (inPlay)
         {
             if (Input.GetButtonDown("Jump") && !isMidAir && jumpCooldownC <= 0f)
             {
                 // Wall jump successful
+                player_sounds.grunt.pitch = Random.Range(.9f, 1.1f);
+                player_sounds.Grunt();
                 player_combo_script.numCombos = player_combo_script.numCombos == 99 ? 99 : player_combo_script.numCombos+1;
                 if (player_combo_script.numCombos >= 40) {
                     player_echo.enabled = true;
@@ -150,23 +160,12 @@ public class playerMovement : MonoBehaviour
     // Called whenever a collider begins colliding with an object
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.tag == "Ground")
-        {
-            // Character "dies" and game is over
-            inPlay = false;
-            isMidAir = false;
-            sr.sprite = death;
-            rb.isKinematic = true;
-            rb.simulated = false;
-            tr.position -= new Vector3(0, groundDeathOffset);
-            tr.rotation = Quaternion.identity;
-            player_pr.Stop();
-            player_combo_script.numCombos = 0;
-        } else if (inPlay)
+        if (inPlay)
         {
             if (collision.collider.tag == "Wall")
             {
                 // Successfully made it to a wall
+                player_sounds.WallCollide();
                 isMidAir = false;
                 sr.sprite = wallhang;
                 if (collision.collider.name == "LeftWall")
@@ -185,6 +184,23 @@ public class playerMovement : MonoBehaviour
                 }
             }
         }
+        if (collision.collider.tag == "Ground")
+        {
+            // Character "dies" and game is over
+            beforeplay = false;
+            player_sounds.wallSlide.Stop();
+            player_sounds.Fall();
+            inPlay = false;
+            isWallSliding = false;
+            isMidAir = false;
+            sr.sprite = death;
+            rb.isKinematic = true;
+            rb.simulated = false;
+            tr.position -= new Vector3(0, groundDeathOffset);
+            tr.rotation = Quaternion.identity;
+            player_pr.Stop();
+            player_combo_script.numCombos = 0;
+        } 
     }
 
 
@@ -202,6 +218,7 @@ public class playerMovement : MonoBehaviour
                 // Emit wallslide dust from wallsliding
                 if (!isWallSliding) {
                     // only play this once while sliding
+                    player_sounds.wallSlide.Play();
                     if (isFacingRight) {
                         player_pr_sp.position = new Vector3(-0.35f, -0.8f, 0f);
                     } else {
@@ -224,6 +241,7 @@ public class playerMovement : MonoBehaviour
             currentTimeUntilWallSlideParticles = 0f;
             isWallSliding = false;
             player_pr.Stop();
+            player_sounds.wallSlide.Stop();
             if (collision.collider.tag == "Wall")
             {
                 sr.sprite = midair;
@@ -233,8 +251,8 @@ public class playerMovement : MonoBehaviour
     }
 
     public void ResetCharacter() {
-        inPlay = false;
         beforeplay = true;
+        inPlay = false;
         isFacingRight = true;
         sr.flipX = false;
         isWallSliding = true;
@@ -253,5 +271,8 @@ public class playerMovement : MonoBehaviour
         spikeBumps = 0;
         currentTimeBetweenJumps = 0;
         player_combo_script.numCombos = 0;
+        sg.GenerateSpikePos();
+        sg.SetSpikePos();
+        restartDelayCount = restartDelay;
     }
 }
