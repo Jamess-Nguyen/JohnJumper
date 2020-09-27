@@ -6,22 +6,25 @@ using UnityEngine.UIElements;
 public class BounceOff : MonoBehaviour
 {
     public Rigidbody2D rb;
-    public Transform playerTransform;
+    private Transform playerTransform;
+    private GameObject player;
     private void Start()
     {
-        rb = rb.GetComponent<Rigidbody2D>();
+        player = GameObject.Find("Player");
+        playerTransform = player.transform;
+        rb = player.GetComponent<Rigidbody2D>();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
-            if (playerTransform.position.y < transform.position.y - transform.localScale.y / 2 || playerTransform.position.y < transform.position.y + transform.localScale.y / 2)
+            if(playerTransform.position.x > transform.position.x + 6 || playerTransform.position.x < transform.position.x -6)
             {
-                rb.velocity = new Vector3(rb.velocity.x, -rb.velocity.y, 0f);
+                rb.velocity = new Vector3(-rb.velocity.x * 2, rb.velocity.y, 0f);
             }
-            else
+            else if (playerTransform.position.y < transform.position.y - (transform.localScale.y / 2) || playerTransform.position.y < transform.position.y + (transform.localScale.y / 2))
             {
-                rb.velocity = new Vector3(-rb.velocity.x, rb.velocity.y, 0f);
+                rb.velocity = new Vector3(rb.velocity.x * 2, -rb.velocity.y, 0f);
             }
         }
 

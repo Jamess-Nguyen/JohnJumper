@@ -7,7 +7,7 @@ using UnityEngine.WSA;
 public class SpriteChange : MonoBehaviour
 {
     private SpriteRenderer rend;
-    private Sprite Idle, Jumper, Wallcling;
+    private Sprite Idle, Jumper, Wallcling, Stagger, Dead;
     public Rigidbody2D Player;
     public BasicMovement BMscript;
     // Start is called before the first frame update
@@ -17,14 +17,21 @@ public class SpriteChange : MonoBehaviour
         Idle = Resources.Load<Sprite>("idle");
         Jumper = Resources.Load<Sprite>("Jumper");
         Wallcling = Resources.Load<Sprite>("wallcling");
-
+        Stagger = Resources.Load<Sprite>("PlayerStagger");
+        Dead = Resources.Load<Sprite>("PlayerDead");
     }
+
     // Update is called once per frame
     void Update()
     {
         if(BMscript.OnFloor == true)
         {
             rend.sprite = Idle;
+        }
+
+        else if(BMscript.playMovement == false)
+        {
+            rend.sprite = Stagger;
         }
 
         else if (Vector2.Dot(Player.velocity, Vector2.right) > 0 && BMscript.playMovement == true)

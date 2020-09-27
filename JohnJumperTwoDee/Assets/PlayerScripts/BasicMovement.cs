@@ -19,12 +19,14 @@ public class BasicMovement : MonoBehaviour
     private Transform CameraPY;
     private Rigidbody2D rb;
     private Scrolling scroll;
+    private Sounds sound;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         CameraPY = Camera.GetComponent<Transform>();
         scroll = ScrollingGameObject.GetComponent<Scrolling>();
+        sound = GetComponent<Sounds>();
     }
     // Update is called once per frame
     private void FixedUpdate()
@@ -55,7 +57,7 @@ public class BasicMovement : MonoBehaviour
         //END ONE BUTTON MOVEMENT
 
         //Angled Jump
-        if (playMovement == true && SecondJump == true && UpJump == false)
+        else if (playMovement == true && SecondJump == true && UpJump == false)
         {
             if (Input.GetButton("Vertical") && RightDownJump == true)
             {
@@ -97,9 +99,6 @@ public class BasicMovement : MonoBehaviour
         if (collision.collider.tag == "Floor")
         {
             OnFloor = true;
-            Left = true;
-            Right = false;
-            playMovement = true;
         }
         //END CHECKING ON FLOOR
 
@@ -117,5 +116,6 @@ public class BasicMovement : MonoBehaviour
             OnFloor = false;
         }
         //END CHECK LEAVING FLOOR
+
     }
 }
