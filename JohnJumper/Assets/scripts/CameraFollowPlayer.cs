@@ -10,7 +10,7 @@ public class CameraFollowPlayer : MonoBehaviour
 
     void Start()
     {
-        Screen.SetResolution(1280, 720, true);
+        Screen.SetResolution(1280, 720, false);
     }
 
     // Update is called once per frame

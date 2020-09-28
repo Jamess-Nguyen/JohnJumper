@@ -13,9 +13,8 @@ public class spikeGen : MonoBehaviour
     public GameObject spike6;
     public GameObject spikeLast;
 
-    public float spikeLeft = -11.4f; // 4.4f
-    public float spikeRight = 11.6f; // 26.6f
-    [Range(-1,1)]
+    public float spikeLeft = -11f;
+    public float spikeRight = 11.4f;
     
     private SpriteRenderer spikeFirst_sr;
     private SpriteRenderer spike1_sr;
@@ -26,20 +25,15 @@ public class spikeGen : MonoBehaviour
     private SpriteRenderer spike6_sr;
     private SpriteRenderer spikeLast_sr;
 
-    [Range(-1,1)]
-    private int First = -1;
-    [Range(-1,1)]
-    private int Second = -1;
-    [Range(-1,1)]
-    private int secondLast = -1;
-    [Range(-1,1)]
-    private int Last = -1; 
+    private bool genSpikeYet; // have we called GenerateSpikePos once yet?
     private List<bool> spikePos; // True is left, False is right.
 
     // Start is called before the first frame update
     void Start()
     {
         spikePos = new List<bool>();
+        for (int i = 0; i < 8; i++) spikePos.Add(false); // initialize list empty
+        genSpikeYet = false;
         spikeFirst_sr = spikeFirst.GetComponent<SpriteRenderer>();
         spike1_sr = spike1.GetComponent<SpriteRenderer>();
         spike2_sr = spike2.GetComponent<SpriteRenderer>();
@@ -53,38 +47,19 @@ public class spikeGen : MonoBehaviour
     }
 
     // Generate the random left right stuff for the spikes.
-    public void GenerateSpikePos(bool up=true)
+    public void GenerateSpikePos()
     {
-        if (up) {
-            // generate spikes moving up
-            if (spikePos.Count > 0) {
-                Last = spikePos[spikePos.Count-1] ? 1 : 0;
-                secondLast = spikePos[spikePos.Count-2] ? 1 : 0;
-                spikePos.Clear();
-            }
-            for (int i = 0; i < 8; i++) {
-                bool val = Random.Range(0, 2) == 1;
-                spikePos.Add(val);
-            }
-            if ((Last != -1) && (secondLast != -1)) {
-                spikePos[1] = (Last == 1 ? true : false);
-                spikePos[0] = (secondLast == 1 ? true : false);
-            }
-        }   else {
-            // generate spikes moving down
-            if (spikePos.Count > 0) {
-                First = spikePos[0] ? 1 : 0;
-                Second = spikePos[1] ? 1 : 0;
-                spikePos.Clear();
-            }
-            for (int i = 0; i < 8; i++) {
-                bool val = Random.Range(0, 2) == 1;
-                spikePos.Add(val);
-            }
-            if ((First != -1) && (Second != -1)) {
-                spikePos[spikePos.Count-1] = (First == 1 ? true : false);
-                spikePos[spikePos.Count-2] = (Second == 1 ? true : false);
-            }
+        if (!genSpikeYet)
+        {
+            genSpikeYet = true;
+            spikePos[0] = Random.Range(0, 2) == 1; // spikeFirst
+            spikePos[6] = spikePos[0]; // spike6
+            spikePos[1] = Random.Range(0, 2) == 1; // spike1
+            spikePos[7] = spikePos[1]; // spikeLast
+        }
+        for (int i = 2; i < 6; i++) {
+            bool val = Random.Range(0, 2) == 1;
+            spikePos[i] = val;
         }
         
     }
