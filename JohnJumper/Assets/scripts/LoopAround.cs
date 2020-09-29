@@ -58,7 +58,7 @@ public class LoopAround : MonoBehaviour
         {
             numLoops--;
             playerTransform.position = new Vector3(playerTransform.position.x, yPositionEnd-.5f);
-            sg.GenerateSpikePos(false);
+            sg.GenerateSpikePos();
             sg.SetSpikePos();
         }
     }
