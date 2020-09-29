@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
-using UnityEngine.WSA;
 
 public class SpriteChange : MonoBehaviour
 {

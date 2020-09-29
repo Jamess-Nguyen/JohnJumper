@@ -12,6 +12,9 @@ TagManager:
   - WallSpriteTop
   - WallSpriteBottom
   - Sponge
+  - One
+  - Two
+  - Three
   layers:
   - Default
   - TransparentFX

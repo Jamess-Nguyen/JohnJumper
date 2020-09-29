@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using UnityEditor.Build;
+//using UnityEditor.Build;
 using UnityEngine;
 
 public class BasicMovement : MonoBehaviour
@@ -19,14 +19,14 @@ public class BasicMovement : MonoBehaviour
     private Transform CameraPY;
     private Rigidbody2D rb;
     private Scrolling scroll;
-    private Sounds sound;
+    public Sounds SoundPlayer;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         CameraPY = Camera.GetComponent<Transform>();
         scroll = ScrollingGameObject.GetComponent<Scrolling>();
-        sound = GetComponent<Sounds>();
+        SoundPlayer = GetComponent<Sounds>();
     }
     // Update is called once per frame
     private void FixedUpdate()
@@ -38,6 +38,7 @@ public class BasicMovement : MonoBehaviour
             {
                 if (Left == true)
                 {
+                    SoundPlayer.JumpSound();
                     rb.AddForce(new Vector3(115, 115, 0), ForceMode2D.Impulse);
                     Left = false;
                     SecondJump = true;
@@ -46,6 +47,7 @@ public class BasicMovement : MonoBehaviour
                 }
                 else if (Right == true)
                 {
+                    SoundPlayer.JumpSound();
                     rb.AddForce(new Vector3(-115, 115, 0), ForceMode2D.Impulse);
                     Right = false;
                     SecondJump = true;
@@ -61,6 +63,7 @@ public class BasicMovement : MonoBehaviour
         {
             if (Input.GetButton("Vertical") && RightDownJump == true)
             {
+                SoundPlayer.JumpSound();
                 rb.velocity = new Vector3(0, 0, 0);
                 rb.AddForce(new Vector3(150, -100, 0), ForceMode2D.Impulse);
                 RightDownJump = false;
@@ -69,6 +72,7 @@ public class BasicMovement : MonoBehaviour
             }
             else if (Input.GetButton("Vertical") && LeftDownJump == true)
             {
+                SoundPlayer.JumpSound();
                 rb.velocity = new Vector3 (0, 0, 0);
                 rb.AddForce(new Vector3(-150, -100, 0), ForceMode2D.Impulse);
                 LeftDownJump = false;
@@ -86,12 +90,14 @@ public class BasicMovement : MonoBehaviour
         {
             Left = true;
             Right = false;
+            SoundPlayer.LandSound();
 
         }
         if (collision.collider.tag == "WallRight")
         {
             Right = true;
             Left = false;
+            SoundPlayer.LandSound();
         }
         //END ONE BUTTON MOVEMENT
 
@@ -117,5 +123,16 @@ public class BasicMovement : MonoBehaviour
         }
         //END CHECK LEAVING FLOOR
 
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "Sponge")
+        {
+            SoundPlayer.SpongeSound();
+        }
+        if(collision.tag == "Disable")
+        {
+            SoundPlayer.DisableSound();
+        }
     }
 }

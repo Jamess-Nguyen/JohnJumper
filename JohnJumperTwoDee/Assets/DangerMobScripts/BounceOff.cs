@@ -20,11 +20,11 @@ public class BounceOff : MonoBehaviour
         {
             if(playerTransform.position.x > transform.position.x + 6 || playerTransform.position.x < transform.position.x -6)
             {
-                rb.velocity = new Vector3(-rb.velocity.x * 2, rb.velocity.y, 0f);
+                rb.velocity = new Vector3(-rb.velocity.x * 3, rb.velocity.y, 0f);
             }
             else if (playerTransform.position.y < transform.position.y - (transform.localScale.y / 2) || playerTransform.position.y < transform.position.y + (transform.localScale.y / 2))
             {
-                rb.velocity = new Vector3(rb.velocity.x * 2, -rb.velocity.y, 0f);
+                rb.velocity = new Vector3(rb.velocity.x * 3, -rb.velocity.y, 0f);
             }
         }
 
